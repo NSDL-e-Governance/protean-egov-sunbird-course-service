@@ -582,7 +582,10 @@ class CourseEnrolmentActor @Inject()(@Named("course-batch-notification-actor") c
      */
     private def getUserData(userDetail: Map[String, Object], eventAttendanceMap: java.util.Map[String, Any]): java.util.Map[String, Any] = {
         eventAttendanceMap.put(JsonKey.USER_ID, userDetail.get(JsonKey.USER_ID).asInstanceOf[String])
-        eventAttendanceMap.put(JsonKey.FULL_NAME, userDetail.getOrDefault(JsonKey.FIRST_NAME, "").asInstanceOf[String].concat(" ").concat(userDetail.getOrDefault(JsonKey.LAST_NAME, "").asInstanceOf[String]))
+        val lastName = userDetail.getOrDefault(JsonKey.LAST_NAME, "").asInstanceOf[String]
+        val firstName = userDetail.getOrDefault(JsonKey.FIRST_NAME, "").asInstanceOf[String]
+        val fullName = if (null != lastName) firstName.concat(" ").concat(lastName) else firstName
+        eventAttendanceMap.put(JsonKey.FULL_NAME, fullName)
         eventAttendanceMap.put(JsonKey.EMAIL, userDetail.getOrDefault(JsonKey.EMAIL, "").asInstanceOf[String])
         eventAttendanceMap
     }
